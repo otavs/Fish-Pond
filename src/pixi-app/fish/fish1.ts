@@ -2,6 +2,7 @@ import { AnimatedSprite, Application, Graphics } from 'pixi.js'
 import Vector from '../../vector'
 import { fish1Sheet } from '../spritesheets'
 import { ColorReplaceFilter } from '@pixi/filter-color-replace'
+import { mouse } from '../../controls'
 
 export class Fish1 {
   pos: Vector
@@ -43,19 +44,9 @@ export class Fish1 {
 
   preUpdate(dt: number, fishList: Fish1[]) {
     this.acc.mult(0)
-    this.acc.add(this.alignment(fishList))
-    this.acc.add(
-      this.separation(
-        fishList.filter((f) => f !== this && this.pos.dist(f.pos) < this.radius)
-      )
-    )
-    this.acc.add(
-      this.cohesion(
-        fishList.filter(
-          (f) => f !== this && this.pos.dist(f.pos) < this.radius * 1.8
-        )
-      )
-    )
+    this.alignment(fishList)
+    this.separation(fishList)
+    this.cohesion(fishList)
   }
 
   update(dt: number, app: Application) {
@@ -79,18 +70,17 @@ export class Fish1 {
       this.pos.y = app.view.height + this.height / 2
 
     const turnFactor = 0.1
-    const marginX = 150
-    const marginY = 100
-    if (this.pos.x < marginX) this.vel.x = this.vel.x + turnFactor
-    if (this.pos.x > app.view.width - marginX)
-      this.vel.x = this.vel.x - turnFactor
-    if (this.pos.y < marginY) this.vel.y = this.vel.y + turnFactor
-    if (this.pos.y > app.view.height - marginY)
-      this.vel.y = this.vel.y - turnFactor
+    const marginX = 0.06 * app.view.width
+    const marginY = 0.06 * app.view.height
+    if (this.pos.x < marginX) this.vel.x += turnFactor
+    if (this.pos.x > app.view.width - marginX) this.vel.x -= turnFactor
+    if (this.pos.y < marginY) this.vel.y += turnFactor
+    if (this.pos.y > app.view.height - marginY) this.vel.y -= turnFactor
   }
 
   destroy() {
     this.anim.destroy()
+    this.arc.destroy()
     this.isDead = true
   }
 
@@ -103,7 +93,7 @@ export class Fish1 {
     if (others.length) {
       steer.div(others.length).setMag(5).sub(this.vel).limit(0.2)
     }
-    return steer
+    this.acc.add(steer)
   }
 
   separation(fishList: Fish1[]) {
@@ -120,7 +110,7 @@ export class Fish1 {
     if (others.length) {
       steer.div(others.length).setMag(5).sub(this.vel).limit(0.2)
     }
-    return steer
+    this.acc.add(steer)
   }
 
   cohesion(fishList: Fish1[]) {
@@ -132,7 +122,7 @@ export class Fish1 {
     if (others.length) {
       steer.div(others.length).sub(this.pos).setMag(5).sub(this.vel).limit(0.2)
     }
-    return steer
+    this.acc.add(steer)
   }
 
   filterByRadius(fishList: Fish1[], radius: number) {

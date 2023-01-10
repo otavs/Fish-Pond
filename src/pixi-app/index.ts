@@ -1,4 +1,6 @@
+import { ParamsParsers } from '@tweakpane/core'
 import { Application, Graphics } from 'pixi.js'
+import { params } from '../params'
 import { stats } from '../stats'
 import Vector from '../vector'
 import { Fish1 } from './fish/fish1'
@@ -16,23 +18,7 @@ export async function createPixiApp(
 
   document.body.appendChild(app.view as any)
 
-  for (let i = 0; i < 200; i++) {
-    const pos = new Vector(
-      Math.random() * app.view.width,
-      Math.random() * app.view.height
-    )
-    const fish = new Fish1(pos)
-    fishList.push(fish)
-    fish.vel = Vector.random()
-    app.stage.addChild(fish.anim)
-    app.stage.addChild(fish.arc)
-
-    // const centerPoint = new Graphics()
-    // centerPoint.beginFill(0xff0000)
-    // centerPoint.drawCircle(pos.x, pos.y, 2)
-    // centerPoint.endFill()
-    // app.stage.addChild(centerPoint)
-  }
+  for (let i = 0; i < params.fish; i++) createFish(app)
 
   app.ticker.add((dt) => {
     stats.update()
@@ -42,7 +28,28 @@ export async function createPixiApp(
     for (const fish of fishList) {
       fish.update(dt, app)
     }
+    if (fishList.length != params.fish) {
+      while (fishList.length > params.fish) fishList.pop()?.destroy()
+      while (fishList.length < params.fish) createFish(app)
+    }
   })
 
   return app
+}
+
+function createFish(app: Application) {
+  const pos = new Vector(
+    Math.random() * app.view.width,
+    Math.random() * app.view.height
+  )
+  const fish = new Fish1(pos)
+  fishList.push(fish)
+  fish.vel = Vector.random()
+  app.stage.addChild(fish.anim)
+  app.stage.addChild(fish.arc)
+  // const centerPoint = new Graphics()
+  // centerPoint.beginFill(0xff0000)
+  // centerPoint.drawCircle(pos.x, pos.y, 2)
+  // centerPoint.endFill()
+  // app.stage.addChild(centerPoint)
 }

@@ -1,9 +1,7 @@
 import { toggleStats } from './stats'
+import Vector from './vector'
 
-export const mouse = {
-  x: 0,
-  y: 0,
-}
+export const mouse = new Vector(0, 0)
 
 export function registerEvents(canvas: HTMLCanvasElement) {
   canvas.addEventListener('mousemove', (e) => {
@@ -11,5 +9,5 @@ export function registerEvents(canvas: HTMLCanvasElement) {
     mouse.y = e.y
   })
 
-  canvas.addEventListener('keydown', toggleStats)
+  document.addEventListener('keydown', toggleStats)
 }

@@ -7,7 +7,7 @@ stats.dom.style.left = 'auto'
 stats.dom.style.top = 'auto'
 stats.dom.style.right = '0'
 stats.dom.style.bottom = '0'
-stats.dom.style.display = 'none'
+// stats.dom.style.display = 'none'
 document.body.appendChild(stats.dom)
 
 export function toggleStats(e: KeyboardEvent) {
