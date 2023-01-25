@@ -1,8 +1,9 @@
 html, body, #root {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -32,4 +33,8 @@ body {
   --tp-label-foreground-color: hsla(0, 0%, 100%, 0.50);
   --tp-monitor-background-color: hsla(0, 0%, 0%, 0.30);
   --tp-monitor-foreground-color: hsla(0, 0%, 100%, 0.30);
+}
+
+.tp-lblv_v {
+  user-select: none;
 }

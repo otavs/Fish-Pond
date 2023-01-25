@@ -1,17 +1,18 @@
-import { Application, Graphics } from 'pixi.js'
+import { Application } from 'pixi.js'
 import { params } from '../params'
 import { SpatialHash } from '../SpatialHash'
 import { stats } from '../stats'
 import Vector from '../vector'
 import { Fish1 } from './fish/fish1'
+import { Background } from '../bg/bg'
+import { createGrid } from './grid'
+import { initShockwaves, updateShockwaves } from './shockwave'
 
 const fishList: Fish1[] = []
 
 let app: Application
 
-export async function createPixiApp(
-  canvas: HTMLCanvasElement
-): Promise<Application> {
+export async function createPixiApp(canvas: HTMLCanvasElement): Promise<Application> {
   app = new Application({
     view: canvas,
     backgroundColor: params.bgColor,
@@ -19,6 +20,8 @@ export async function createPixiApp(
   })
 
   document.body.appendChild(app.view as HTMLCanvasElement)
+
+  const bg = new Background(app)
 
   const spatialHash = new SpatialHash(
     [
@@ -28,11 +31,13 @@ export async function createPixiApp(
     [100, 100]
   )
 
+  initShockwaves(app)
+  // createGrid(app)
+
   for (let i = 0; i < params.fish; i++) createFish(app, spatialHash)
 
   app.ticker.add((dt) => {
     stats.update()
-
     ;(app.renderer as any).background.color = params.bgColor
 
     for (const fish of fishList) fish.preUpdate()
@@ -42,16 +47,16 @@ export async function createPixiApp(
       while (fishList.length > params.fish) fishList.pop()?.destroy()
       while (fishList.length < params.fish) createFish(app, spatialHash)
     }
+
+    bg.update(dt)
+    updateShockwaves(dt)
   })
 
   return app
 }
 
 function createFish(app: Application, spatialHash: SpatialHash) {
-  const pos = new Vector(
-    Math.random() * app.view.width,
-    Math.random() * app.view.height
-  )
+  const pos = new Vector(Math.random() * app.view.width, Math.random() * app.view.height)
 
   const fish = new Fish1(pos, spatialHash)
   fishList.push(fish)
@@ -81,7 +86,7 @@ export function downloadScreenshot() {
   }
   const downloadLink = document.createElement('a')
   downloadLink.id = 'downloadLink'
-  downloadLink.download = 'canvas.jpg'
+  downloadLink.download = 'canvas.png'
   document.body.appendChild(downloadLink)
   const canvas = app.view as HTMLCanvasElement
   downloadLink.href = canvas.toDataURL()

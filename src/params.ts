@@ -1,16 +1,21 @@
+import MobileDetect from 'mobile-detect'
 import React from 'react'
 import styled from 'styled-components'
 import { Pane } from 'tweakpane'
 import { downloadScreenshot, shuffle } from './pixi-app'
 import stats from './stats'
 
+const md = new MobileDetect(window.navigator.userAgent)
+
 export const params = {
-  fish: 200,
+  fish: md.mobile() ? 100 : 200,
   speed: 1.1,
   scale: 1,
   neighbors: 6,
   stats: false,
-  bgColor: 0x99dfff,
+  // bgColor: 0x99dfff,
+  bgColor: 0x31a9ee,
+  water: true,
   alignment: {
     mag: 5,
     limit: 0.2,
@@ -25,6 +30,16 @@ export const params = {
     mag: 5,
     limit: 0.2,
     mult: 1,
+  },
+  flee: {
+    mag: 7.5,
+    limit: 0.4,
+    mult: 1.5,
+  },
+  wander: {
+    mag: 2,
+    limit: 0.2,
+    mult: 0.2,
   },
 }
 
@@ -91,11 +106,19 @@ moreFolder.addInput(params, 'scale', {
 //   step: 1,
 //   label: 'Neighbors checked',
 // })
+moreFolder.addInput(params.flee, 'mult', {
+  label: 'Flee',
+  min: 0,
+  max: 2,
+  step: 0.01,
+})
 moreFolder.addInput(params, 'bgColor', {
   label: 'Background',
   view: 'color',
 })
-
+moreFolder.addInput(params, 'water', {
+  label: 'Water',
+})
 moreFolder
   .addInput(params, 'stats', {
     label: 'Stats',
@@ -104,61 +127,13 @@ moreFolder
     stats.setVisible(e.value)
   })
 
-// const alignmentFolder = pane.addFolder({
-//   title: 'Alignment',
-//   expanded: EXPAND_ALL,
-// })
-// alignmentFolder.addInput(params.alignment, 'mag', {
-//   min: 0,
-//   max: 20,
-//   step: 0.1,
-// })
-// alignmentFolder.addInput(params.alignment, 'limit', {
-//   min: 0,
-//   max: 2,
-//   step: 0.01,
-// })
-// paramsFolder.add(alignmentFolder)
-
-// const separationFolder = pane.addFolder({
-//   title: 'Separation',
-//   expanded: EXPAND_ALL,
-// })
-// separationFolder.addInput(params.separation, 'mag', {
-//   min: 0,
-//   max: 20,
-//   step: 0.1,
-// })
-// separationFolder.addInput(params.separation, 'limit', {
-//   min: 0,
-//   max: 2,
-//   step: 0.01,
-// })
-// paramsFolder.add(separationFolder)
-
-// const cohesionFolder = pane.addFolder({
-//   title: 'Cohesion',
-//   expanded: EXPAND_ALL,
-// })
-// cohesionFolder.addInput(params.cohesion, 'mag', {
-//   min: 0,
-//   max: 20,
-//   step: 0.1,
-// })
-// cohesionFolder.addInput(params.cohesion, 'limit', {
-//   min: 0,
-//   max: 2,
-//   step: 0.01,
-// })
-// paramsFolder.add(cohesionFolder)
-
 actionsTab.addButton({ title: 'Shuffle' }).on('click', () => shuffle())
 
-// actionsTab
-//   .addButton({
-//     title: 'Download Screenshot',
-//   })
-//   .on('click', () => downloadScreenshot())
+actionsTab
+  .addButton({
+    title: 'Download Screenshot',
+  })
+  .on('click', () => downloadScreenshot())
 
 const paneStyle = pane.element.parentElement!.style
 paneStyle.transition = 'opacity 0.25s linear'

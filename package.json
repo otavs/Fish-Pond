@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@pixi/filter-color-replace": "^5.0.0",
+    "@pixi/filter-shockwave": "^5.1.1",
     "color": "^4.2.3",
+    "mobile-detect": "^1.4.5",
     "pixi.js": "^7.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,6 +34,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "gh-pages": "^4.0.0",
     "typescript": "^4.9.3",
-    "vite": "^4.0.0"
+    "vite": "^4.0.0",
+    "vite-plugin-glsl": "^1.1.1"
   }
 }

@@ -68,13 +68,20 @@ export default class Vector {
     return Math.atan2(this.y, this.x)
   }
 
+  setAngle(angle: number) {
+    const mag = this.mag()
+    this.x = Math.cos(angle) * mag
+    this.y = Math.sin(angle) * mag
+    return this
+  }
+
   angleBetween(v: Vector) {
     return v.angle() - this.angle()
   }
 
-  rotate(theta: number) {
-    let cos = Math.cos(theta),
-      sin = Math.sin(theta),
+  rotate(angle: number) {
+    let cos = Math.cos(angle),
+      sin = Math.sin(angle),
       x = this.x,
       y = this.y
     this.x = x * cos - y * sin
