@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js'
+import { Application, Graphics } from 'pixi.js'
 import { params } from '../params'
 import { SpatialHash } from '../SpatialHash'
 import { stats } from '../stats'
@@ -17,6 +17,7 @@ export async function createPixiApp(canvas: HTMLCanvasElement): Promise<Applicat
     view: canvas,
     backgroundColor: params.bgColor,
     resizeTo: window,
+    preserveDrawingBuffer: true
   })
 
   document.body.appendChild(app.view as HTMLCanvasElement)
@@ -26,9 +27,9 @@ export async function createPixiApp(canvas: HTMLCanvasElement): Promise<Applicat
   const spatialHash = new SpatialHash(
     [
       [0, 0],
-      [window.innerWidth, window.innerHeight],
+      [app.view.width, app.view.width],
     ],
-    [100, 100]
+    [25, 25]
   )
 
   initShockwaves(app)
@@ -63,12 +64,6 @@ function createFish(app: Application, spatialHash: SpatialHash) {
   fish.vel = Vector.random()
   app.stage.addChild(fish.anim)
   // app.stage.addChild(fish.arc)
-
-  // const centerPoint = new Graphics()
-  // centerPoint.beginFill(0xff0000)
-  // centerPoint.drawCircle(pos.x, pos.y, 2)
-  // centerPoint.endFill()
-  // app.stage.addChild(centerPoint)
 }
 
 export function shuffle() {
@@ -86,9 +81,9 @@ export function downloadScreenshot() {
   }
   const downloadLink = document.createElement('a')
   downloadLink.id = 'downloadLink'
-  downloadLink.download = 'canvas.png'
+  downloadLink.download = 'fish.png'
   document.body.appendChild(downloadLink)
   const canvas = app.view as HTMLCanvasElement
-  downloadLink.href = canvas.toDataURL()
+  downloadLink.href = canvas.toDataURL('image/png')
   downloadLink.click()
 }

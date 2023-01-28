@@ -84,7 +84,7 @@ const moreFolder = paramsTab.addFolder({
 
 moreFolder.addInput(params, 'fish', {
   min: 0,
-  max: 1000,
+  max: md.mobile() ? 500 : 1000,
   step: 1,
   label: 'Fish',
 })

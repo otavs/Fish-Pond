@@ -17,7 +17,7 @@ export class Fish1 {
   height: number
   isDead: boolean = false
   scale: number = 0.2
-  arc: Graphics
+  // arc: Graphics
   radius: number
   client: Client
   spatialHash: SpatialHash
@@ -44,11 +44,11 @@ export class Fish1 {
     this.width = this.anim.width
     this.height = this.anim.height
 
-    this.arc = new Graphics()
-    this.arc.beginFill(0x000000)
-    this.arc.drawCircle(0, 0, this.radius)
-    this.arc.endFill()
-    this.arc.alpha = 0.02 * 0
+    // this.arc = new Graphics()
+    // this.arc.beginFill(0x000000)
+    // this.arc.drawCircle(0, 0, this.radius)
+    // this.arc.endFill()
+    // this.arc.alpha = 0.02
 
     this.spatialHash = spatialHash
     this.client = spatialHash.newClient([pos.x, pos.y], [200, 200], this)
@@ -66,11 +66,6 @@ export class Fish1 {
   }
 
   update(dt: number, app: Application) {
-    if (isNaN(this.pos.x)) {
-      console.log('F')
-      return
-    }
-
     this.vel.add(this.acc.copy().mult(dt))
     this.pos.add(this.vel.copy().mult(dt * params.speed))
     this.anim.position.x = this.pos.x
@@ -79,8 +74,8 @@ export class Fish1 {
     this.anim.scale.x = this.scale * params.scale
     this.anim.scale.y = (this.vel.x < 0 ? -1 : 1) * this.scale * params.scale
 
-    this.arc.position.x = this.pos.x
-    this.arc.position.y = this.pos.y
+    // this.arc.position.x = this.pos.x
+    // this.arc.position.y = this.pos.y
 
     if (this.pos.x > app.view.width + this.width / 2) this.pos.x = -this.width / 2
     if (this.pos.x < -this.width / 2) this.pos.x = app.view.width + this.width / 2
@@ -101,7 +96,7 @@ export class Fish1 {
 
   destroy() {
     this.anim.destroy()
-    this.arc.destroy()
+    // this.arc.destroy()
     this.spatialHash.remove(this.client)
     this.isDead = true
   }
@@ -133,7 +128,7 @@ export class Fish1 {
     let count = 0
     for (const other of others) {
       const dist = this.pos.dist(other.pos)
-      if (other !== this && dist < this.radius) {
+      if (other !== this && dist < this.radius && dist != 0) {
         const diff = this.pos
           .copy()
           .sub(other.pos)

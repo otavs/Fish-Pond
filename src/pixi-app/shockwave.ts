@@ -34,7 +34,7 @@ class Shockwave {
 
 export function initShockwaves(app: Application) {
   app.stage.filters = []
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 8; i++) {
     const shockwave = new Shockwave()
     shockwaves.push(shockwave)
     app.stage.filters.push(shockwave.filter)
@@ -44,7 +44,7 @@ export function initShockwaves(app: Application) {
 export function updateShockwaves(dt: number) {
   const now = performance.now()
 
-  if (mouse.pressed && now - lastShockwaveTime > 100 && !(mouse.pos.dist(lastShockwavePosition) < 50 && now - lastShockwaveTime < 300)) {
+  if (mouse.pressed && now - lastShockwaveTime > 120 && !(mouse.pos.dist(lastShockwavePosition) < 50 && now - lastShockwaveTime < 350)) {
     lastShockwaveTime = now
     for (const shockwave of shockwaves) {
       if (!shockwave.isActive()) {

@@ -67,8 +67,8 @@ export function registerEvents(canvas: HTMLCanvasElement) {
   canvas.ontouchend = (e) => {
     mouse.pressed = false
     mouse.leftPressed = false
-    mouse.pos.x = e.touches[0].clientX
-    mouse.pos.y = e.touches[0].clientY
+    // mouse.pos.x = e.touches[0].clientX
+    // mouse.pos.y = e.touches[0].clientY
   }
 
   document.addEventListener('keydown', toggleStats)
