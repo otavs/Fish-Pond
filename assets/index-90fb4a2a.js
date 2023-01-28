@@ -953,7 +953,7 @@ uniform float iTime;\r
 uniform vec3 texture_color;
 
 void main() {\r
-    vec2 uv = gl_FragCoord.xy / iResolution.xy;\r
+    vec2 uv = gl_FragCoord.xy / iResolution.y;\r
     vec4 k = vec4(iTime)*0.8;\r
     k.xy = uv * 10.0;\r
     float val1 = length(0.5-fract(k.xyw*=mat3(vec3(-2.0,-1.0,0.0), vec3(3.0,-1.0,1.0), vec3(1.0,-1.0,-1.0))*0.5));\r
